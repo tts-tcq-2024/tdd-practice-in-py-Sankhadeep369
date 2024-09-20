@@ -1,0 +1,29 @@
+Test Specification Document
+This document outlines the test cases designed to validate the implementation of the StringCalculator function. The StringCalculator function parses strings of numbers separated by delimiters (commas, new lines, or custom delimiters) and returns their sum. It handles both functional and edge case scenarios to ensure the function works as expected.
+Features to be Tested
+Basic Summation
+
+Summing numbers separated by commas.
+Handling Different Delimiters
+
+Supporting both commas and newlines as delimiters.
+Supporting custom delimiters provided at the beginning of the string.
+Edge Cases
+
+Handling empty strings.
+Ignoring numbers larger than 1000.
+Throwing an exception when encountering negative numbers.
+Handling multiple negative numbers in the exception message.
+Test Case ID	Objective	Input	Expected Output	Rationale
+TC1	Verify function returns 0 for empty input	""	0	Empty string should return 0 as there are no numbers to sum.
+TC2	Handle a single number input	"0"	0	A single number should return itself as the sum.
+TC3	Sum two numbers separated by a comma	"1,2"	3	Sum of 1 and 2 should be 3.
+TC4	Ignore numbers greater than 1000	"1,1001"	1	Numbers greater than 1000 are ignored, so the result should be 1.
+TC5	Handle custom delimiters	"//;\n1;2"	3	Custom delimiter ; is used to separate numbers, the sum should be 3.
+TC6	Sum with newline delimiter	"1\n2,3"	6	Newlines are valid delimiters, the sum of 1, 2, and 3 is 6.
+TC7	Throw exception for negative numbers	"1,-2,3"	Exception: "Negatives not allowed: -2"	Negative numbers are not allowed, the exception should indicate the negative number encountered.
+TC8	Handle multiple negative numbers in exception	"1,-2,-3"	Exception: "Negatives not allowed: -2, -3"	Multiple negative numbers should all be listed in the exception message.
+TC9	Handle large custom delimiters	"//[***]\n1***2***3"	6	Delimiter *** is used, the sum of 1, 2, and 3 is 6.
+TC10	Handle multiple delimiters	"1\n2,3"	6	The function should correctly handle both commas and newlines as delimiters, resulting in a sum of 6.
+Conclusion
+The test cases outlined in this document ensure that the StringCalculator function adheres to the specified requirements. The test cases cover basic functionality, various types of delimiters, and edge cases like negative numbers and large values. By thoroughly testing these scenarios, we can ensure that the function is robust and behaves as expected under different conditions.
