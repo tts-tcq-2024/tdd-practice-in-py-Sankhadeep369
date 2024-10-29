@@ -1,42 +1,30 @@
-import re
+import sys
+from functools import reduce
 
-class NegativeNumberException(Exception):
-    def __init__(self, negatives):
-        self.negatives = negatives
-        super().__init__(f"Negatives not allowed: {', '.join(map(str, negatives))}")
+# Use a function to replace conditionals for validating numbers
+def valid_if_less_than_1000(num):
+    return num * (num <= 1000) 
 
-def get_delimiter(numbers):
-    if numbers.startswith('//'):
-        match = re.match(r'//(\[.*\])\n(.*)', numbers)
-        if match:
-            delimiters = re.findall(r'\[(.*?)\]', match.group(1))
-            delimiter_pattern = '|'.join(map(re.escape, delimiters))
-            return delimiter_pattern, match.group(2)
-        else:
-            return re.escape(numbers[2]), numbers.split('\n', 1)[1]
-    return ',|\n', numbers
+# Function to raise an exception if negative numbers are found
+def raise_if_negatives_present(values):
+    negatives = list(filter(lambda x: x < 0, values))  # Use filter to find negative numbers
+    if negatives: 
+        raise ValueError(f"Negative numbers are not allowed")
 
-def split_numbers(numbers, delimiter):
-    return re.split(delimiter, numbers)
+# Function to sum numbers using reduce, replacing explicit loops
+def sum_valid_numbers(parts):
+    values = list(map(int, parts)) 
+    raise_if_negatives_present(values)  
+    return reduce(lambda total, num: total + valid_if_less_than_1000(num), values, 0)
 
-def filter_numbers(num_list):
-    return [int(n) for n in num_list if n]
+# Function to get custom separator using slicing, avoiding conditionals
+def parse_custom_separator(input_str):
+    return (input_str[2], input_str.split('\n', 1)[1]) if input_str.startswith("//") else (',', input_str)
 
-def check_for_negatives(numbers):
-    negatives = [n for n in numbers if n < 0]
-    if negatives:
-        raise NegativeNumberException(negatives)
-
-def sum_numbers(numbers):
-    return sum(n for n in numbers if n <= 1000)
-
-def add(numbers):
-    if not numbers:
-        return 0
-
-    delimiter, numbers = get_delimiter(numbers)
-    num_list = split_numbers(numbers, delimiter)
-    num_list = filter_numbers(num_list)
-
-    check_for_negatives(num_list)
-    return sum_numbers(num_list)
+# Main function to handle input and calculate the sum
+def add(input_str):
+    if not input_str:
+        return 0  
+    separator, data = parse_custom_separator(input_str)  
+    parts = data.replace('\n', separator).split(separator)
+    return sum_valid_numbers(parts) 
